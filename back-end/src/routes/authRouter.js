@@ -1,7 +1,8 @@
 import express from 'express'
 import { createProduct, getProductsAll, getProductId, getProductCategory,
 updateProduct, deleteProduct } from '../services/productsService.js';
-import { registerUser, loginUser, profile, adminExists, allUsers, deleteUsers } from '../services/userService.js';
+import { registerUser, loginUser, profile, adminExists, allUsers,
+     deleteUsers, updateUsers } from '../services/userService.js';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.get('/profile', profile);
 
 //GESTION USUARIOS
 router.get('/users', allUsers)
+router.put('/users/:id', updateUsers)
 router.delete('/users/:id', deleteUsers)
 
 //GESTION DE PRODUCTOS

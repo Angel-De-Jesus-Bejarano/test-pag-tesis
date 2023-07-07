@@ -89,21 +89,45 @@ export const adminExists = async (req, res) => {
 
 export const allUsers = async (req, res) => {
     try {
-        const users = await User.find({role: 'client'});
+        const users = await User.find({ role: 'client' });
         res.json({ users })
     } catch (error) {
         res.status(500).json({ error: 'Error al obtener los usuarios' });
     }
 }
+export const updateUsers = async (req, res) => {
+    try {
+        const { name, email } = req.body;
 
+        const authorizationHeader = req.headers.authorization;
+        //verificar si el usuario tiene el rol admin
+        const token = authorizationHeader.split(' ')[1]
+        const decodedToken = jwt.verify(token, secretKey)
+        if (decodedToken.role !== 'admin') {
+            return res.status(403).json({ error: 'Acceso denegado ' })
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { name, email },
+            { new: true }
+        );
+        if (!user) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+        res.status(201).json({ message: 'Usuario actualizado exitosamente' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+}
 export const deleteUsers = async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
-        if(!user){
+        if (!user) {
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
         res.json({ message: 'Usuario eliminado exitosamente' });
     } catch (error) {
-        res.status(500).json({ error: 'Error al eliminar el Uusario' });       
+        res.status(500).json({ error: 'Error al eliminar el Uusario' });
     }
 }

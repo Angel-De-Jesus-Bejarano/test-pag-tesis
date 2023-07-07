@@ -8,7 +8,7 @@ export const createProduct = async (req, res) => {
         const { name, category, description, price, image } = req.body
 
         const authorizationHeader = req.headers.authorization;
-        console.log(authorizationHeader, 'xddddd')
+        /*console.log(authorizationHeader, 'xddddd')*/
 
         if (!authorizationHeader) {
             return res.status(401).json({ error: 'No se proporcionó el encabezado de autorización.' });

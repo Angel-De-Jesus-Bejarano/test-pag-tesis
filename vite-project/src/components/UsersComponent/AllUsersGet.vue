@@ -5,7 +5,7 @@
             <div v-for="user in users" :key="user._id" class="card-user">
                 <p>{{user.name}}</p>
                 <div class="buttons">
-                    <button>Editar</button>
+                    <ButtonEditUser :user="user"/>
                     <ButtonDeleteUser :user="user"/>
                 </div>
             </div>
@@ -17,6 +17,7 @@
 import { ref, onMounted } from 'vue';
 import apiClient from '../../api';
 import ButtonDeleteUser from './ButtonDeleteUser.vue';
+import ButtonEditUser from './ButtonEditUser.vue';
 
 const users = ref([])
 
