@@ -2,7 +2,7 @@
     <div class="section">
         <div class="registro-box">
             <h2>Login To Your Account</h2>
-            <form @submit.prevent="loginUser">
+            <form @submit.prevent="fetchLoginUser">
                 <div>
                     <input type="email" id="email" v-model="user.email" required placeholder="Email">
                 </div>
@@ -19,11 +19,10 @@
 </template>
 
 <script setup>
-import apiClient from '../api'
 import { ref } from 'vue';
 import { useRouter } from 'vue-router'
 import jwt_decode from 'jwt-decode'
-
+import { loginUser } from '../service/RegisterAndLogin'
 
 const router = useRouter();
 
@@ -33,16 +32,12 @@ const user = ref({
     password: ref("")
 })
 
-const loginUser = async () => {
+const fetchLoginUser = async () => {
     try {
-        const response = await apiClient.post('/login', {
-            email: user.value.email,
-            password: user.value.password
-        });
-        console.log(response.data)
-        const token = response.data.token;
+        const response = await loginUser(user.value.email, user.value.password)
+        
+        const token = response.token;
         localStorage.setItem("token", token)
-
         const decodedToken = jwt_decode(token);
         const role = decodedToken.role;
         console.log(role)
@@ -53,7 +48,6 @@ const loginUser = async () => {
         } else if (role === 'client') {
             router.push('/redirect'); // Redirigir a la ruta de redirección para clientes
         }
-
     } catch (error) {
         console.error(error);
     }

@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, reactive, defineProps } from 'vue';
-import apiClient from '../../api';
+import apiClient from '../../service/api';
 
 const showModal = ref(false)
 const userId = ref('')

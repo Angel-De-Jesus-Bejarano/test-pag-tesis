@@ -20,7 +20,8 @@
                         <p>{{ product.category }}</p>
                         <p>${{ product.price }}</p>
                     </div>
-                    <ButtonEditProduct :product="product" />
+                    <ButtonEditProduct :product="product" @actualizar-categoria="fetchProductsByCategory"/>
+                    <p>{{variable}}</p>
                     <ButtonDeleteProduct :product="product" />
                 </div>
             </div>
@@ -33,20 +34,27 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
-import { getProductsByCategory } from '../../api';
+import { getProductsByCategory } from '../../service/api';
 
+//components
 import ButtonEditProduct from './ButtonEditProduct.vue';
 import ButtonDeleteProduct from './ButtonDeleteProduct.vue';
-//import WebSocket from 'socket.io-client'
 
-//getProductsVariables
+
+//Variables Reactivas
 const categories = ref(['Lacteos', 'Frutas', 'Rex', 'Pescado']);
 const products = ref([]);
-//estado para almacenar la categoria selecionada
 const selectedCategory = ref('')
+const variable = ref('')
 
-
-const fetchProductsByCategory = async () => {
+//Metodos
+const fetchProductsByCategory = async (valor) => {
+    if(!valor){
+        console.log('no hay dato a actualizar')
+    }else{
+        selectedCategory.value = valor
+    }
+    
     try {
         if (selectedCategory.value) {
             const categoryProducts = await getProductsByCategory(selectedCategory.value)
@@ -68,13 +76,11 @@ const getProductImageUrl = (base64Image) => {
     return `${base64Image}`;
 };
 
-// Llamar a fetchProductsByCategory cuando el componente se monta y cuando cambia la categoría seleccionada
+//OnMounted
 onMounted(fetchProductsByCategory)
+//Watch
 watch(selectedCategory, fetchProductsByCategory)
-/* Watch es una funcion que sirve para reaccionar ante cambios de propiedades reactivas
-toma dos argumentos en su forma basica(Proiedad a observar, funcion de devolucion de llamada)
-en resumen cuando la variable reactiva "selectedCategory" cambie, se va ejecutar la funcion "fectchProducsByCategory
-Explicacion por si acaso julian no sabe para que sireve watch"*/
+
 
 </script>
 

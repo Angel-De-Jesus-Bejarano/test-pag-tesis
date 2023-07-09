@@ -18,10 +18,12 @@
 </template>
 
 <script setup>
-import { defineProps, ref, reactive } from 'vue';
-import apiClient from '../../api';
-const showModal = ref(false)
+import { defineProps, defineEmits, ref, reactive } from 'vue';
+import apiClient from '../../service/api';
 
+//variables reactivas
+const showModal = ref(false)
+const productId = ref('');
 const editedProductData = reactive({
     name: '',
     category: '',
@@ -29,16 +31,17 @@ const editedProductData = reactive({
     price: 0,
     image: null,
 })
+//props
 const products = defineProps({
     product: {
         type: Object,
         required: true
     }
 })
+//emits
+const emit = defineEmits(['actualizarCategoria'])
 
-const productId = ref('');
-
-//Codigo para editar producto
+//Metodos
 const editProduct = (products) => {
     editedProductData.name = products.product.name;
     editedProductData.category = products.product.category;
@@ -67,7 +70,6 @@ const onImageChange = (event) => {
 const updateProduct = async (editedProductData) => {
     try {
         const accessToken = localStorage.getItem('token');
-        console.log(accessToken)
         if (!accessToken) {
             console.error('No se encontró el token de autorización.');
             return;
@@ -87,9 +89,10 @@ const updateProduct = async (editedProductData) => {
             image: editedProductData.image
         }, config)
         console.log(response.data.message);
+        //emitimos variable al padre
+        emit('actualizarCategoria', editedProductData.category)
         closeModal();
 
-        // Envía una notificación al servidor WebSocket con el producto actualizado
        
     } catch (error) {
         console.error('Error al actualizar el producto:', error);

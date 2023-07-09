@@ -15,9 +15,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import apiClient from '../../api';
+import apiClient from '../../service/api';
 import ButtonDeleteUser from './ButtonDeleteUser.vue';
 import ButtonEditUser from './ButtonEditUser.vue';
+
 
 const users = ref([])
 

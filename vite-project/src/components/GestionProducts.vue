@@ -22,6 +22,7 @@ import ProductForm from './ProductsComponent/ProductForm.vue';
 import GetCategoryProducts from './ProductsComponent/GetCategoryProducts.vue';
 import AllProductsGet from './ProductsComponent/AllProductsGet.vue';
 
+
 const render = ref({
   registerProduct: true,
   getCategory: false,

@@ -18,7 +18,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 //import apiClient from '../api';
-import apiClient from '../../api'
+import apiClient from '../../service/api';
 
 const products = ref([])
 

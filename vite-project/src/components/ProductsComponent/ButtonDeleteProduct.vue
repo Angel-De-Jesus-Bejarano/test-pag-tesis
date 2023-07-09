@@ -16,7 +16,7 @@
 
 <script setup>
 import { ref, defineProps } from 'vue';
-import apiClient from '../../api';
+import apiClient from '../../service/api';
 const productId = ref('');
 const showModal = ref(false)
 const products = defineProps({

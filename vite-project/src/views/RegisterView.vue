@@ -2,7 +2,7 @@
     <div class="section">
         <div class="registro-box">
             <h2>Register To Create Account</h2>
-            <form @submit.prevent="registerUser">
+            <form @submit.prevent="fetchRegisterUser">
                 <div>
                     <input type="text" id="name" v-model="user.name" required placeholder="Nombre">
 
@@ -24,9 +24,10 @@
 
 
 <script setup>
-import apiClient from '../api'
+import apiClient from '../service/api';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { registerUser } from '../service/RegisterAndLogin';
 
 const router = useRouter();
 const user = ref({
@@ -46,23 +47,14 @@ const chechAdminExists = async () => {
     }
 }
 
-const registerUser = async () => {
-    const adminExists = await chechAdminExists();
-    /*if (adminExists && user.value.role === 'admin') {
-        console.log('Ya existe un usuario administrador, solo se permite el registro de clientes.');
-    } else {}*/
+const fetchRegisterUser = async () => {
         try {
-            const response = await apiClient.post("/register", {
-                name: user.value.name,
-                email: user.value.email,
-                password: user.value.password,
-            })
-            console.log(response.data)
+            const response = await registerUser(user.value.name, user.value.email, user.value.password)
+            console.log(response)
             // Manejar la respuesta exitosa del registro si se desea
             router.push('/login')
         } catch (error) {
             console.error(error);
-            // Manejar el error del registro si se desea
         }
     }
 

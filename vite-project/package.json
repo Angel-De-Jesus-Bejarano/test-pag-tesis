@@ -16,7 +16,8 @@
     "socket.io": "^4.7.1",
     "socket.io-client": "^4.7.1",
     "vue": "^3.2.47",
-    "vue-router": "^4.2.2"
+    "vue-router": "^4.2.2",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",

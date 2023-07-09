@@ -21,10 +21,10 @@
         </form>
     </div>
     
-    <div v-if="iterador" class="modal">
+    <div v-if="showModal" class="modal">
         <div class="box-modal">
             <h3>Registrado con exito</h3>
-            <button @click="modal">Continuar</button>
+            <button @click="next">Continuar</button>
         </div>
     </div>
     
@@ -32,22 +32,27 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-import jwt_decode from 'jwt-decode'
-import { ref } from 'vue';
-import apiClient from '../../api'
+import { reactive, ref } from 'vue';
+import apiClient from '../../service/api';
 
-
-
-const iterador = ref(false)
-const viewAllproducts = ref(false)
-const product = ref({
-    name: ref(''),
-    category: ref(''),
-    description: ref(''),
-    price: ref(0),
-    image: ref(null),
+//Variables reactivas
+const showModal = ref(false)
+const product = reactive({
+    name: '',
+    category: '',
+    description: '',
+    price: 0,
+    image: null,
 });
+
+
+//metodos
+const enviar = () => {
+    showModal.value = true
+}
+const next = () => {
+    showModal.value = false
+}
 
 const onImageChange = (event) => {
     const file = event.target.files[0];
@@ -73,7 +78,6 @@ const addProduct = async () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-    // Enviar la solicitud al servidor para crear el producto
       const response = await apiClient.post('/products', {
         name : product.value.name,
         category: product.value.category,
@@ -82,31 +86,17 @@ const addProduct = async () => {
         image: product.value.image
       }, config);  
 
-      // Verificar la respuesta del servidor
       if (response.status === 201) {
-          // El producto se creó con éxito
           console.log('Producto creado exitosamente:', response.data);
-          // Puedes mostrar un mensaje de éxito o redirigir al usuario a otra página
         } else {
-          // El servidor respondió con un código de error
           console.error('Error al crear el producto:', response.data);
-          // Puedes mostrar un mensaje de error o realizar alguna acción de manejo de errores
         }
     } catch (error) {
         console.error('Error en la solicitud:', error.message);
         console.log('Detalles del error:', error.response.data); 
     }
 }
-const enviar = () => {
-    iterador.value = true
-}
-const modal = () => {
-    iterador.value = false
-}
 
-const AllProducts = () => {
-    viewAllproducts.value = !viewAllproducts.value
-}
 
 </script>
 
