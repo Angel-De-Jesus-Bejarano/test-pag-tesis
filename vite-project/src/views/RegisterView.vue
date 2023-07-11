@@ -34,7 +34,7 @@ const user = ref({
     name: ref(""),
     email: ref(""),
     password: ref(""),
-    role: 'admin'
+    role: 'client'
 })
 
 const chechAdminExists = async () => {

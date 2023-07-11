@@ -7,7 +7,7 @@
                 <img :src="getProductImageUrl(product.image)" alt="Producto">
                 <p>{{ product.description }}</p>
                 <div class="price">
-                    <p>{{ product.category }}</p>
+                    <p>{{ product.category.name}}</p>
                     <p>${{ product.price }}</p>
                 </div>
             </div>
@@ -20,17 +20,19 @@ import { ref, onMounted } from 'vue';
 //import apiClient from '../api';
 import apiClient from '../../service/api';
 
-const products = ref([])
+const products = ref({})
+
 
 const fetchProducts = async () => {
     try {
-        const response = await apiClient.get('/products');
+        const response = await apiClient.get('/products?populate=category');
         products.value = response.data.products;
     } catch (error) {
         console.error('Error al obtener los productos:', error.message);
     }
 }
 
+console.log(products.value)
 const getProductImageUrl = (base64Image) => {
     // Si la imagen es una URL válida, la retornamos tal cual
     if (base64Image.startsWith('http')) {

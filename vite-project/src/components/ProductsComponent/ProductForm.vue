@@ -1,12 +1,17 @@
 <template>
     <div class="box-products">
         <h2>Registra un Producto</h2>
-        <form @submit.prevent="addProduct" class="box-form" p>
+        <form @submit.prevent="addProduct" class="box-form">
             <div>
                 <input type="text" id="name" v-model="product.name" required placeholder="Nombre del Producto">
             </div>
             <div>
-                <input type="text" id="category" v-model="product.category" required placeholder="Categoria">
+                <select id="categories" v-model="product.category">
+                    <option value="">Seleccionar categoría</option>
+                    <option v-for="categoria in categorias" :key="categoria._id" :value="categoria.name">
+                        {{ categoria.name }}
+                    </option>
+                </select>
             </div>
             <div>
                 <textarea id="description" v-model="product.description" required placeholder="Descripcion"></textarea>
@@ -15,37 +20,39 @@
                 <input type="number" id="price" v-model="product.price">
             </div>
             <div>
+                <input type="number" id="numProducts" v-model="product.numProducts">
+            </div>
+            <div>
                 <input type="file" @change="onImageChange" id="image" accept="image/*">
             </div>
             <button @click="enviar" type="submit">Enviar</button>
         </form>
     </div>
-    
+
     <div v-if="showModal" class="modal">
         <div class="box-modal">
             <h3>Registrado con exito</h3>
             <button @click="next">Continuar</button>
         </div>
     </div>
-    
-    
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import apiClient from '../../service/api';
 
 //Variables reactivas
 const showModal = ref(false)
-const product = reactive({
+const product = ref({
     name: '',
     category: '',
     description: '',
     price: 0,
+    numProducts: 0,
     image: null,
 });
 
-
+const categorias = ref([]);
 //metodos
 const enviar = () => {
     showModal.value = true
@@ -68,7 +75,7 @@ const onImageChange = (event) => {
 const addProduct = async () => {
     try {
         const token = localStorage.getItem('token')
-        if(!token){
+        if (!token) {
             console.error('No se encontró el token de autorización.');
             return;
         }
@@ -78,24 +85,35 @@ const addProduct = async () => {
                 'Authorization': `Bearer ${token}`
             }
         }
-      const response = await apiClient.post('/products', {
-        name : product.value.name,
-        category: product.value.category,
-        description: product.value.description,
-        price: product.value.price,
-        image: product.value.image
-      }, config);  
+        const response = await apiClient.post('/products', {
+            name: product.value.name,
+            category: product.value.category,
+            description: product.value.description,
+            price: product.value.price,
+            numProducts: product.value.numProducts,
+            image: product.value.image
+        }, config);
 
-      if (response.status === 201) {
-          console.log('Producto creado exitosamente:', response.data);
+        if (response.status === 201) {
+            console.log('Producto creado exitosamente:', response.data);
         } else {
-          console.error('Error al crear el producto:', response.data);
+            console.error('Error al crear el producto:', response.data);
         }
     } catch (error) {
         console.error('Error en la solicitud:', error.message);
-        console.log('Detalles del error:', error.response.data); 
+        console.log('Detalles del error:', error.response.data);
     }
 }
+
+const getCategories = async () => {
+    try {
+        const response = await apiClient.get('/Categorys')
+        categorias.value = response.data.category
+    } catch (error) {
+        console.error('Error al obtener los productos:', error.message);
+    }
+}
+onMounted(getCategories)
 
 
 </script>
@@ -156,4 +174,5 @@ const addProduct = async () => {
     align-items: center;
     background-color: white;
     padding: 40px;
-}</style>
+}
+</style>

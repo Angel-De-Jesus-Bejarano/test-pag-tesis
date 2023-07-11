@@ -3,7 +3,7 @@ import { createProduct, getProductsAll, getProductId, getProductCategory,
 updateProduct, deleteProduct } from '../services/productsService.js';
 import { registerUser, loginUser, profile, adminExists, allUsers,
      deleteUsers, updateUsers } from '../services/userService.js';
-
+import { createCategory, getCategoryAll } from '../services/categoryService.js';
 const router = express.Router();
 
 
@@ -33,5 +33,8 @@ router.put('/products/:id', updateProduct);
 // Ruta para eliminar un producto por su ID (solo para usuarios con rol de admin)
 router.delete('/products/:id', deleteProduct);
 
+//GESTION CATEGORIA DE PRODUCTO
+router.post('/Categorys', createCategory)
+router.get('/Categorys', getCategoryAll)
 
 export default router

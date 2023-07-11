@@ -5,15 +5,12 @@ const secretKey = process.env.KEY_SECRET;
 
 export const createProduct = async (req, res) => {
     try {
-        const { name, category, description, price, image } = req.body
+        const { name, category, description, price, numProducts, image } = req.body
 
         const authorizationHeader = req.headers.authorization;
-        /*console.log(authorizationHeader, 'xddddd')*/
-
         if (!authorizationHeader) {
             return res.status(401).json({ error: 'No se proporcionó el encabezado de autorización.' });
         }
-
         //verificar si el usuario tiene el rol admin
         const token = authorizationHeader.split(' ')[1]
         const decodedToken = jwt.verify(token, secretKey)
@@ -24,7 +21,7 @@ export const createProduct = async (req, res) => {
         // Genera un nombre único para la imagen
         //const imageName = `${uuidv4()}.png`; // Puedes ajustar la extensión según el tipo de imagen que desees admitir
 
-        const product = new Product({ name, category, description, price, image })
+        const product = new Product({ name, category, description, price, numProducts, image })
         await product.save();
         res.status(201).json({ message: 'Producto creado exitosamente' })
     } catch (error) {

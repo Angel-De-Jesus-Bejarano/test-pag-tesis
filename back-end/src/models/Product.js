@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Category from './Category.js'
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -6,14 +7,18 @@ const productSchema = new mongoose.Schema({
     required: true
   },
   category: {
-    type: String,
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category'
   },
   description: {
     type: String,
     required: true
   },
   price: {
+    type: Number,
+    required: true
+  },
+  numProducts: {
     type: Number,
     required: true
   },
